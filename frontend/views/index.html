@@ -4,9 +4,31 @@
     <title>Flask Form</title>
 </head>
 <body>
-    <form action="/submit" method="post">
-        <input type="text" name="name" placeholder="Enter your name" required>
+    <form id="myForm">
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
         <button type="submit">Submit</button>
     </form>
+
+    <div id="result"></div>
+
+    <script>
+        const form = document.getElementById('myForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // prevent default form submission
+            const name = document.getElementById('name').value;
+
+            try {
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+                const data = await response.json();
+                document.getElementById('result').innerText = data.message;
+            } catch (err) {
+                document.getElementById('result').innerText = 'Error sending data to backend';
+            }
+        });
+    </script>
 </body>
 </html>
